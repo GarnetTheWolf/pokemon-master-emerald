@@ -2332,7 +2332,9 @@ u8 DoBattlerEndTurnEffects(void)
                   && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES)
             {
                 gBattleScripting.battler = battler;
-                gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 16;
+                gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
+                if (gBattleStruct->moveDamage[battler] == 0)
+                    gBattleStruct->moveDamage[battler] = 1;
                 BattleScriptExecute(BattleScript_DamagingWeather);
                 effect++;
             }
@@ -2950,9 +2952,9 @@ u8 DoBattlerEndTurnEffects(void)
              && IsBattlerAlive(battler)
              && !IsBattlerProtectedByMagicGuard(battler, ability))
             {
-                gBattleMoveDamage = (gBattleMons[battler].maxHP / 16) + (Random() % 3) - 1;
-                if (gBattleMoveDamage == 0)
-                    gBattleMoveDamage = 1;
+                gBattleStruct->moveDamage[battler] = (gBattleMons[battler].maxHP / 16) + (Random() % 3) - 1;
+                if (gBattleStruct->moveDamage[battler] == 0)
+                    gBattleStruct->moveDamage[battler] = 1;
                 BattleScriptExecute(BattleScript_ReverseModeTurnDmg);
     		    LaunchStatusAnimation(battler, B_ANIM_STATUS_REVERSE_MODE);
                 effect++;

@@ -11396,7 +11396,7 @@ static void Cmd_various(void)
         VARIOUS_ARGS();
         if (!TryChangeBattleWeather(gBattlerAttacker, BATTLE_WEATHER_SHADOW_SKY, FALSE))
         {
-            gMoveResultFlags |= MOVE_RESULT_MISSED;
+            gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SHADOW_SKY;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
