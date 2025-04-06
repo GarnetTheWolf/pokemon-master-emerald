@@ -1,24 +1,20 @@
 @ Interact with cuttable tree
 EventScript_CutTree::
 	lockall
-	goto_if_unset FLAG_BADGE01_GET, EventScript_CheckTreeCantCut
-	checkpartymove MOVE_CUT
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckTreeCantCut
+	goto_if_unset FLAG_RECOVERED_DEVON_GOODS, EventScript_CheckTreeCantCut
+	checkpartyfollower
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
-	buffermovename STR_VAR_2, MOVE_CUT
 	msgbox Text_WantToCut, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_CancelCut
 	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	closemessage
 EventScript_CutTreeCommon:
-	isfollowerfieldmoveuser VAR_0x8004
-	setfieldeffectargument 3, VAR_0x8004 @ skip pose if so
 	dofieldeffect FLDEFF_USE_CUT_ON_TREE
 	waitstate
 EventScript_CutTreeDown:: @ fallthrough
 	setflag FLAG_SAFE_FOLLOWER_MOVEMENT
-	call_if_eq VAR_0x8004, TRUE, EventScript_FollowerFieldMove
+	call EventScript_FollowerFieldMove
 	applymovement VAR_LAST_TALKED, Movement_CutTreeDown
 	waitmovement 0
 	removeobject VAR_LAST_TALKED
@@ -45,16 +41,14 @@ EventScript_CancelCut::
 	end
 
 Text_WantToCut:
-	.string "This tree looks like it can be\n"
-	.string "CUT down!\p"
-	.string "Would you like to CUT it?$"
+	.string "Want to cut the tree?$"
 
 Text_MonUsedFieldMove:
-	.string "{STR_VAR_1} used {STR_VAR_2}!$"
+	.string "{STR_VAR_1} used the PokéTools!$"
 
 Text_CantCut:
 	.string "This tree looks like it can be\n"
-	.string "CUT down!$"
+	.string "cut down!$"
 
 @ Use rock smash from party menu
 EventScript_UseRockSmash::
@@ -65,7 +59,7 @@ EventScript_UseRockSmash::
 EventScript_RockSmash::
 	lockall
 	goto_if_unset FLAG_BADGE03_GET, EventScript_CantSmashRock
-	checkpartymove MOVE_ROCK_SMASH
+	checkpartyfollower
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSmashRock
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
@@ -227,7 +221,7 @@ EventScript_StrengthBoulder::
 	lockall
 	goto_if_unset FLAG_BADGE04_GET, EventScript_CantStrength
 	goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_CheckActivatedBoulder
-	checkpartymove MOVE_STRENGTH
+	checkpartyfollower
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
 	setfieldeffectargument 0, VAR_RESULT
 	msgbox Text_WantToStrength, MSGBOX_YESNO
@@ -286,7 +280,7 @@ Text_StrengthActivated:
 
 EventScript_UseWaterfall::
 	lockall
-	checkpartymove MOVE_WATERFALL
+	checkpartyfollower
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantWaterfall
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
@@ -319,7 +313,7 @@ Text_MonUsedWaterfall:
 
 EventScript_UseDive::
 	lockall
-	checkpartymove MOVE_DIVE
+	checkpartyfollower
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantDive
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
@@ -342,7 +336,7 @@ EventScript_EndDive::
 
 EventScript_UseDiveUnderwater::
 	lockall
-	checkpartymove MOVE_DIVE
+	checkpartyfollower
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSurface
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT

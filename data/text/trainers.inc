@@ -1,15 +1,17 @@
 Route102_Text_CalvinIntro:
-	.string "If you have POKéMON with you, then\n"
-	.string "you're an official POKéMON TRAINER!\l"
-	.string "You can't say no to my challenge!$"
+	.string "Hey! Do you have Pokémon?\p"
+	.string "Alright! My first Rika League\n"
+	.string "battle!$"
 
 Route102_Text_CalvinDefeated:
-	.string "Arrgh, I lost…\n"
-	.string "I should have trained mine more…$"
+	.string "Oh, no!\n"
+	.string "Already a failure…$"
 
 Route102_Text_CalvinPostBattle:
-	.string "Listen, you. If you're strong,\n"
-	.string "you should have told me before!$"
+	.string "Most Trainers in Rika like\n"
+	.string "Double Battles.\p"
+	.string "I have a hard enough time winning\n"
+	.string "Singles!$"
 
 Route102_Text_CalvinRegister:
 	.string "I've been working hard at this since\n"
@@ -47,15 +49,16 @@ Route102_Text_AllenPostBattle:
 	.string "I wish I would win soon…$"
 
 Route102_Text_RickIntro:
-	.string "Hahah! Our eyes met!\n"
-	.string "I'll take you on with my BUG POKéMON!$"
+	.string "Darkwing Holt is scary. I just\n"
+	.string "wanted to catch some Pokémon!$"
 
 Route102_Text_RickDefeated:
-	.string "Ow! Down and out!$"
+	.string "You're scary, too!$"
 
 Route102_Text_RickPostBattle:
-	.string "If you lock eyes with a TRAINER,\n"
-	.string "you have to challenge! It's a rule!$"
+	.string "If you lock eyes with a Trainer,\n"
+	.string "you have to challenge. That's\l"
+	.string "scary, isn't it?$"
 
 Route102_Text_TianaIntro:
 	.string "I'm going to keep winning and aim\n"

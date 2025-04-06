@@ -1,0 +1,533 @@
+raw `
+.set LOCALID_BIRCH, 2
+.set LOCALID_RIVAL, 4
+
+Route101_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, Route101_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route101_OnFrame
+	.byte 0
+
+Route101_OnTransition:
+	call ProfBirch_EventScript_UpdateLocation
+	call_if_lt setvar VAR_ROUTE101_STATE, 3, DarkwingHolt_EventScript_HideRival 
+	end
+
+Route101_OnFrame:
+	.2byte 0
+
+Route101_EventScript_HideMapNamePopup::
+	setflag FLAG_HIDE_MAP_NAME_POPUP
+	setvar VAR_ROUTE101_STATE, 1
+	end
+
+Route101_EventScript_StartBirchRescue::
+	lockall
+	playse SE_PIN
+	applymovement LOCALID_BIRCH, Common_Movement_FacePlayer
+	applymovement LOCALID_BIRCH, Common_Movement_ExclamationMark
+	waitmovement 0
+	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Movement_EnterScene
+	waitmovement 0
+	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
+	closemessage
+	releaseall
+	end
+
+Route101_EventScript_PreventExitSouth::
+	lockall
+	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Movement_PreventExitSouth
+	waitmovement 0
+	releaseall
+	end
+
+Route101_EventScript_PreventExitWest::
+	lockall
+	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Movement_PreventExitWest
+	waitmovement 0
+	releaseall
+	end
+
+Route101_EventScript_PreventExitNorth::
+	lockall
+	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, Route101_Movement_PreventExitNorth
+	waitmovement 0
+	releaseall
+	end
+
+Route101_Movement_PreventExitSouth:
+	walk_up
+	step_end
+
+Route101_Movement_PreventExitWest:
+	walk_right
+	step_end
+
+Route101_Movement_PreventExitNorth:
+	walk_down
+	step_end
+
+Route101_Movement_ZigzagoonChaseInCircles:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_down
+	walk_fast_down
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_down
+	walk_fast_down
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_down
+	walk_fast_down
+	walk_fast_left
+	walk_fast_left
+	step_end
+
+Route101_Movement_ZigzagoonChase1:
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_up
+	step_end
+
+@ Leftover data? This command is unused.
+	step_end
+
+Route101_Movement_ZigzagoonFaceBirch:
+	walk_in_place_fast_left
+	walk_in_place_fast_left
+	walk_in_place_fast_left
+	walk_in_place_fast_left
+	step_end
+
+Route101_Movement_EnterScene:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_in_place_faster_left
+	step_end
+
+Route101_Movement_BirchRunInCircles:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_down
+	walk_fast_down
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_down
+	walk_fast_down
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_down
+	walk_fast_down
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	step_end
+
+Route101_Movement_BirchRunAway1:
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_right
+	walk_fast_up
+	walk_fast_up
+	step_end
+
+@ Leftover data? This command is unused.
+	step_end
+
+Route101_Movement_BirchFaceZigzagoon:
+	walk_in_place_fast_right
+	walk_in_place_fast_right
+	walk_in_place_fast_right
+	walk_in_place_fast_right
+	step_end
+
+Route101_Movement_Unused1:
+	walk_up
+	walk_up
+	step_end
+
+Route101_Movement_Unused2:
+	walk_up
+	walk_left
+	walk_up
+	step_end
+
+Route101_EventScript_Youngster::
+	msgbox Route101_Text_TakeTiredPokemonToPokeCenter, MSGBOX_NPC
+	end
+
+Route101_EventScript_Boy::
+	msgbox Route101_Text_WildPokemonInTallGrass, MSGBOX_NPC
+	end
+
+Route101_EventScript_RouteSign::
+	msgbox Route101_Text_RouteSign, MSGBOX_SIGN
+	end
+
+Route101_EventScript_BirchsBag::
+	return
+
+Route101_EventScript_HideMayInBedroom::
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM
+	return
+
+Route101_EventScript_HideBrendanInBedroom::
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM
+	return
+
+Route101_Movement_BirchApproachPlayer:
+	walk_right
+	step_end
+
+Route101_Text_HelpMe:
+	.string "H-help me!$"
+
+Route101_Text_PleaseHelp:
+	.string "Hello! You over there!\n"
+	.string "Please! Help!\p"
+	.string "In my BAG!\n"
+	.string "There's a POKé BALL!$"
+
+Route101_Text_DontLeaveMe:
+	.string "Wh-Where are you going?!\n"
+	.string "Don't leave me like this!$"
+
+Route101_Text_YouSavedMe:
+	.string "PROF. BIRCH: Whew…\p"
+	.string "I was in the tall grass studying wild\n"
+	.string "POKéMON when I was jumped.\p"
+	.string "You saved me.\n"
+	.string "Thanks a lot!\p"
+	.string "Oh?\p"
+	.string "Hi, you're {PLAYER}{KUN}!\p"
+	.string "This is not the place to chat, so come\n"
+	.string "by my POKéMON LAB later, okay?$"
+
+Route101_Text_TakeTiredPokemonToPokeCenter:
+	.string "If POKéMON get tired, take them to\n"
+	.string "a POKéMON CENTER.\p"
+	.string "There's a POKéMON CENTER in OLDALE\n"
+	.string "TOWN right close by.$"
+
+Route101_Text_WildPokemonInTallGrass:
+	.string "Wild POKéMON will jump out at you in\n"
+	.string "tall grass.\p"
+	.string "If you want to catch POKéMON, you have\n"
+	.string "to go into the tall grass and search.$"
+
+Route101_Text_RouteSign:
+	.string "Darkwing Holt\p"
+	.string "{UP_ARROW} Taproot Town\n"
+	.string "{DOWN_ARROW} Darkwing Grove$"
+
+`
+
+script DarkwingHolt_EventScript_HideRival {
+	removeobject(LOCALID_RIVAL)
+}
+
+script DarkwingHolt_EventScript_StartChooseStarter {
+	lockall
+	playbgm(MUS_RG_OAK, TRUE)
+	playse(SE_PIN)
+	applymovement(LOCALID_BIRCH, Common_Movement_ExclamationMark)
+	waitmovement(0)
+	applymovement(LOCALID_BIRCH, Common_Movement_WalkInPlaceUp)
+	waitmovement(0)
+	msgbox(DarkwingHolt_Text_SakuraMeetsPlayer, MSGBOX_DEFAULT)
+	closemessage
+	call(LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex)
+	setflag(FLAG_SYS_NATIONAL_DEX)
+	msgbox(DarkwingHolt_Text_GivePokedex, MSGBOX_DEFAULT)
+	closemessage
+	applymovement(LOCALID_BIRCH, Common_Movement_WalkInPlaceLeft)
+	waitmovement(0)
+	delay(16)
+	applymovement(LOCALID_BIRCH, Common_Movement_WalkInPlaceRight)
+	waitmovement(0)
+	delay(16)
+	applymovement(LOCALID_BIRCH, Common_Movement_FacePlayer)
+	waitmovement(0)
+	msgbox("Sakura: Okay! Enough delaying!", MSGBOX_DEFAULT)
+	closemessage
+	call(DarkwingHolt_EventScript_ChooseStarter)
+	giveitem(ITEM_POKE_BALL, 20)
+	msgbox(DarkwingHolt_Text_GavePokeballs, MSGBOX_DEFAULT)
+	closemessage
+	applymovement(LOCALID_BIRCH, DarkwingHolt_Movement_LeaveStarterChoice)
+	waitmovement(0)
+	setflag(FLAG_SYS_POKEMON_GET)
+	setvar(VAR_ROUTE101_STATE, 2)
+	setvar(VAR_LITTLEROOT_INTRO_STATE, 3)
+	setflag(FLAG_HIDE_LITTLEROOT_TOWN_FAT_MAN)
+	setflag(FLAG_HIDE_ROUTE_101_BIRCH)
+	removeobject(LOCALID_BIRCH)
+	fadedefaultbgm
+	releaseall
+}
+
+script DarkwingHolt_EventScript_ChooseStarter {
+
+	while {
+		message(DarkwingHolt_Text_ChooseStarter)
+
+		dynmultichoice(0, 0, TRUE, 3, 0, DYN_MULTICHOICE_CB_NONE, 
+			"Bulbasaur", "Charmander", "Squirtle", 
+			"Chikorita", "Cyndaquil", "Totodile", 
+			"Treecko", "Torchic", "Mudkip", 
+			"Turtwig", "Chimchar", "Piplup", 
+			"Snivy", "Tepig", "Oshawott", 
+			"Chespin", "Fennekin", "Froakie", 
+			"Rowlet", "Litten", "Popplio", 
+			"Grookey", "Scorbunny", "Sobble", 
+			"Sprigatito", "Fuecoco", "Quaxly"
+		)
+
+		copyvar(VAR_TEMP_1, VAR_RESULT) // Store the selection index
+		copyvar(VAR_TEMP_2, SPECIES_NONE) // Clear species variable first
+
+		if (var(VAR_TEMP_1) == 0) {
+			setvar(VAR_TEMP_2, SPECIES_BULBASAUR)
+		} elif (var(VAR_TEMP_1) == 1) {
+			setvar(VAR_TEMP_2, SPECIES_CHARMANDER)
+		} elif (var(VAR_TEMP_1) == 2) {
+			setvar(VAR_TEMP_2, SPECIES_SQUIRTLE)
+		} elif (var(VAR_TEMP_1) == 3) {
+			setvar(VAR_TEMP_2, SPECIES_CHIKORITA)
+		} elif (var(VAR_TEMP_1) == 4) {
+			setvar(VAR_TEMP_2, SPECIES_CYNDAQUIL)
+		} elif (var(VAR_TEMP_1) == 5) {
+			setvar(VAR_TEMP_2, SPECIES_TOTODILE)
+		} elif (var(VAR_TEMP_1) == 6) {
+			setvar(VAR_TEMP_2, SPECIES_TREECKO)
+		} elif (var(VAR_TEMP_1) == 7) {
+			setvar(VAR_TEMP_2, SPECIES_TORCHIC)
+		} elif (var(VAR_TEMP_1) == 8) {
+			setvar(VAR_TEMP_2, SPECIES_MUDKIP)
+		} elif (var(VAR_TEMP_1) == 9) {
+			setvar(VAR_TEMP_2, SPECIES_TURTWIG)
+		} elif (var(VAR_TEMP_1) == 10) {
+			setvar(VAR_TEMP_2, SPECIES_CHIMCHAR)
+		} elif (var(VAR_TEMP_1) == 11) {
+			setvar(VAR_TEMP_2, SPECIES_PIPLUP)
+		} elif (var(VAR_TEMP_1) == 12) {
+			setvar(VAR_TEMP_2, SPECIES_SNIVY)
+		} elif (var(VAR_TEMP_1) == 13) {
+			setvar(VAR_TEMP_2, SPECIES_TEPIG)
+		} elif (var(VAR_TEMP_1) == 14) {
+			setvar(VAR_TEMP_2, SPECIES_OSHAWOTT)
+		} elif (var(VAR_TEMP_1) == 15) {
+			setvar(VAR_TEMP_2, SPECIES_CHESPIN)
+		} elif (var(VAR_TEMP_1) == 16) {
+			setvar(VAR_TEMP_2, SPECIES_FENNEKIN)
+		} elif (var(VAR_TEMP_1) == 17) {
+			setvar(VAR_TEMP_2, SPECIES_FROAKIE)
+		} elif (var(VAR_TEMP_1) == 18) {
+			setvar(VAR_TEMP_2, SPECIES_ROWLET)
+		} elif (var(VAR_TEMP_1) == 19) {
+			setvar(VAR_TEMP_2, SPECIES_LITTEN)
+		} elif (var(VAR_TEMP_1) == 20) {
+			setvar(VAR_TEMP_2, SPECIES_POPPLIO)
+		} elif (var(VAR_TEMP_1) == 21) {
+			setvar(VAR_TEMP_2, SPECIES_GROOKEY)
+		} elif (var(VAR_TEMP_1) == 22) {
+			setvar(VAR_TEMP_2, SPECIES_SCORBUNNY)
+		} elif (var(VAR_TEMP_1) == 23) {
+			setvar(VAR_TEMP_2, SPECIES_SOBBLE)
+		} elif (var(VAR_TEMP_1) == 24) {
+			setvar(VAR_TEMP_2, SPECIES_SPRIGATITO)
+		} elif (var(VAR_TEMP_1) == 25) {
+			setvar(VAR_TEMP_2, SPECIES_FUECOCO)
+		} elif (var(VAR_TEMP_1) == 26) {
+			setvar(VAR_TEMP_2, SPECIES_QUAXLY)
+		}
+
+		// Show sprite
+		showmonpic(VAR_TEMP_2, 10, 3)
+		playmoncry(VAR_TEMP_2, CRY_MODE_ENCOUNTER)
+		bufferspeciesname(STR_VAR_1, VAR_TEMP_2)
+		msgbox("Sakura: So, you want {STR_VAR_1}?", MSGBOX_YESNO)
+		hidemonpic
+
+		// If player says yes, give the mon
+		if (var(VAR_RESULT) == TRUE) {
+			givemon(VAR_TEMP_2, 5, ITEM_ORAN_BERRY, ITEM_CHERISH_BALL)
+			playfanfare(MUS_OBTAIN_ITEM)
+			message(DarkwingHolt_Text_ReceivedStarter)
+			waitmessage
+			msgbox(gText_NicknameThisPokemon, MSGBOX_YESNO)
+			if (var(VAR_RESULT) == TRUE) {
+				call(Common_EventScript_GetGiftMonPartySlot)
+				call(Common_EventScript_NameReceivedPartyMon)
+			}
+			bufferpartymonnick(STR_VAR_1, 0)
+			msgbox(DarkwingHolt_Text_TakeCareOfPokemon, MSGBOX_DEFAULT)
+			closemessage
+			break
+		}
+	}
+}
+
+script DarkwingHolt_EventScript_RivalMeetsPlayer {
+	lockall
+	clearflag(FLAG_HIDE_LITTLEROOT_TOWN_RIVAL)
+	addobject(LOCALID_RIVAL)
+	playbgm(MUS_RG_ENCOUNTER_DEOXYS, TRUE)
+	playse(SE_PIN)
+	applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark)
+	waitmovement(0)
+	applymovement(OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceLeft)
+	applymovement(LOCALID_RIVAL, DarkwingHolt_Movement_RivalApproachPlayer)
+	waitmovement(0)
+	msgbox(DarkwingHolt_Text_IntroduceRival, MSGBOX_DEFAULT)
+	trainerbattle_no_intro(TRAINER_BRENDAN_ROUTE_103_TREECKO, DarkwingHolt_Text_RivalDefeated)
+	msgbox(DarkwingHolt_Text_AfterRivalFight, MSGBOX_DEFAULT)
+	closemessage
+	applymovement(LOCALID_RIVAL, DarkwingHolt_Movement_RivalShovesPlayer)
+	playse(SE_WALL_HIT)
+	applymovement(OBJ_EVENT_ID_PLAYER, DarkwingHolt_Movement_PlayerGetsShoved)
+	waitmovement(0)
+	applymovement(LOCALID_RIVAL, Common_Movement_WalkRight)
+	waitmovement(0)
+	opendoor(19, 3)
+	waitdooranim
+	applymovement(LOCALID_RIVAL, Common_Movement_WalkUp)
+	waitmovement(0)
+	playse(SE_EXIT)
+	setvar(VAR_ROUTE101_STATE, 3)
+	setflag(FLAG_HIDE_LITTLEROOT_TOWN_RIVAL)
+	removeobject(LOCALID_RIVAL)
+	closedoor(19, 3)
+	waitdooranim
+	fadedefaultbgm
+	releaseall
+}
+
+movement DarkwingHolt_Movement_LeaveStarterChoice {
+	walk_down * 3
+	walk_right * 2
+	walk_down * 5
+}
+
+movement DarkwingHolt_Movement_RivalApproachPlayer {
+	walk_right * 7
+	walk_down
+	walk_right
+	walk_in_place_right
+}
+
+movement DarkwingHolt_Movement_RivalShovesPlayer {
+	walk_in_place_right
+}
+
+movement DarkwingHolt_Movement_PlayerGetsShoved {
+	walk_in_place_faster_left
+	lock_facing_direction
+	jump_right
+	unlock_facing_direction
+}
+
+movement Littleroottown_Movement_RivalLeavesPlayer {
+	walk_down * 5
+}
+
+text DarkwingHolt_Text_SakuraMeetsPlayer {
+	format("Sakura: {PLAYER}! Hello!\pAre you excited? I am!\pI have several Pokémon with me today. You can take the one you like the most!\pOh, and before I forget!")
+}
+
+text DarkwingHolt_Text_GivePokedex {
+	format("Sakura: That's a Pokédex!\pJust log any Pokémon you catch in there. It'll help me a lot, {PLAYER}.\pMy lab can never have too much data on Pokémon, after all!")
+}
+
+text DarkwingHolt_Text_ComeHere {
+	format("Sakura: {PLAYER}! Over here!")
+}
+
+text DarkwingHolt_Text_ChooseStarter {
+	format("Sakura: Which one will it be?")
+}
+
+text DarkwingHolt_Text_ReceivedStarter {
+	format("{PLAYER} received the {STR_VAR_1} from Prof. Sakura!")
+}
+
+text DarkwingHolt_Text_TakeCareOfPokemon {
+	format("Sakura: Excelent choice! I'm sure you and {STR_VAR_1} will get along great!\p"
+	"Remember, {STR_VAR_1} is new to having a Trainer.\pIt might do you some good to spend some time with it.\p"
+	"Check {STR_VAR_1}'s Summary to learn about it. If you're lucky, it might even want to come out and walk with you!\p"
+	"Sakura: Good luck, {PLAYER}! I hope you become great friends! And…")
+}
+
+text DarkwingHolt_Text_GavePokeballs {
+	format("Sakura: Those are Pokéballs. You can use them to capture new Pokémon!\p"
+	"If you can, try to catch every species. It would really help me with my research.\p"
+	"That's everything. I'd best get back to my lab, but it was nice to meet you!\p"
+	"Take care, {PLAYER}! I'll be in touch!")
+}
+
+text DarkwingHolt_Text_IntroduceRival {
+	format("???: So, you're Midnite's kid.\p"
+	"…Huh? You don't know me?\p"
+	"Well, that makes sense.\p"
+	"That dumb expression. Stupid clothes. You don't look like the type to know things.\p"
+	"My name is Ravynn.\p"
+	"Ravynn: I'm the strongest Trainer in Rika. Nobody else comes close.\p"
+	"Soon, I'll be the best in the world.\p"
+	"I crushed the Gym, but I think I'll crush you, too.")
+}
+
+text DarkwingHolt_Text_RivalDefeated {
+	format("Hmm. My Pokémon are still weak from the Gym.")
+}
+
+text DarkwingHolt_Text_AfterRivalFight {
+	format ("Ravynn: I swapped teams after beating Midnite to let my stronger Pokémon rest. Don't count on winning next time.\p"
+	"From what I just saw, you shouldn't bother competing in the Rika League.\p"
+	"And if you get in my way again…\p"
+	"Well, don't.")
+}

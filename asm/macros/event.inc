@@ -1877,6 +1877,10 @@
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
 
+	.macro checkpartyfollower
+	.byte SCR_OP_CHECKPARTYFOLLOWER
+	.endm
+
 @ Supplementary
 
 	.macro goto_if_unset flag:req, dest:req

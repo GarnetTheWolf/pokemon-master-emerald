@@ -20,8 +20,8 @@
     },
     {
       "map": "MAP_OLDALE_TOWN",
-      "offset": 0,
-      "direction": "right"
+      "offset": -6,
+      "direction": "left"
     }
   ],
   "object_events": [
@@ -143,8 +143,12 @@
       "flag": "0"
     }
   ],
-  "warp_events": [],
-  "coord_events": [],
+  "warp_events": [
+
+  ],
+  "coord_events": [
+
+  ],
   "bg_events": [
     {
       "type": "sign",

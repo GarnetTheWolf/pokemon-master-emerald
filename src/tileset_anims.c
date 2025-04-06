@@ -834,6 +834,13 @@ void InitTilesetAnim_BattleDome(void)
     sSecondaryTilesetAnimCallback = TilesetAnim_BattleDome;
 }
 
+void InitTilesetAnim_Darkwing(void)
+{
+    sSecondaryTilesetAnimCounter = 0;
+    sSecondaryTilesetAnimCounterMax = sPrimaryTilesetAnimCounterMax;
+    sSecondaryTilesetAnimCallback = NULL;
+}
+
 static void TilesetAnim_Rustboro(u16 timer)
 {
     if (timer % 8 == 0)
