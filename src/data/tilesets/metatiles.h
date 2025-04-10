@@ -207,12 +207,3 @@ const u16 gMetatileAttributes_MysteryEventsHouse[] = INCBIN_U16("data/tilesets/s
 
 const u16 gMetatiles_UnionRoom[] = INCBIN_U16("data/tilesets/secondary/union_room/metatiles.bin");
 const u16 gMetatileAttributes_UnionRoom[] = INCBIN_U16("data/tilesets/secondary/union_room/metatile_attributes.bin");
-
-const u16 gMetatiles_Darkwing[] = INCBIN_U16("data/tilesets/secondary/darkwing/metatiles.bin");
-const u16 gMetatileAttributes_Darkwing[] = INCBIN_U16("data/tilesets/secondary/darkwing/metatile_attributes.bin");
-
-const u16 gMetatiles_HouseInterior[] = INCBIN_U16("data/tilesets/secondary/house_interior/metatiles.bin");
-const u16 gMetatileAttributes_HouseInterior[] = INCBIN_U16("data/tilesets/secondary/house_interior/metatile_attributes.bin");
-
-const u16 gMetatiles_Dojo[] = INCBIN_U16("data/tilesets/secondary/dojo/metatiles.bin");
-const u16 gMetatileAttributes_Dojo[] = INCBIN_U16("data/tilesets/secondary/dojo/metatile_attributes.bin");

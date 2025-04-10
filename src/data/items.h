@@ -12602,13 +12602,13 @@ const struct Item gItemsInfo[] =
 
     [ITEM_DEVON_PARTS] =
     {
-        .name = _("PokéTools"),
-        .pluralName = _("PokéTools"),
+        .name = _("Devon Parts"),
+        .pluralName = _("Devon Parts"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A Cipher invention\n"
-            "that gives Pokémon\n"
-            "traversal abilities."),
+            "A package that\n"
+            "contains Devon's\n"
+            "machine parts."),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,

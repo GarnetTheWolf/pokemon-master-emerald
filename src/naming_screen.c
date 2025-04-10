@@ -29,7 +29,6 @@
 #include "main.h"
 #include "constants/event_objects.h"
 #include "constants/rgb.h"
-#include "random.h"
 
 enum {
     INPUT_NONE,
@@ -308,92 +307,6 @@ static const u8 sPageColumnXPos[KBPAGE_COUNT][KBCOL_COUNT] = {
     [KEYBOARD_LETTERS_LOWER] = {0, 12, 24, 56, 68, 80, 92, 123},
     [KEYBOARD_LETTERS_UPPER] = {0, 12, 24, 56, 68, 80, 92, 123},
     [KEYBOARD_SYMBOLS]       = {0, 22, 44, 66, 88, 110}
-};
-
-static const u8 *const gMalePresetNames[] = {
-    gText_DefaultNameRiley,
-    gText_DefaultNameMorgan,
-    gText_DefaultNameAlex,
-    gText_DefaultNameSkyler,
-    gText_DefaultNameJordan,
-    gText_DefaultNameCasey,
-    gText_DefaultNameDrew,
-    gText_DefaultNameTaylor,
-    gText_DefaultNameAvery,
-    gText_DefaultNameQuinn,
-    gText_DefaultNameEmery,
-    gText_DefaultNameRowan,
-    gText_DefaultNameReese,
-    gText_DefaultNameBlair,
-    gText_DefaultNameFinley,
-    gText_DefaultNameDakota,
-    gText_DefaultNameShiloh,
-    gText_DefaultNamePeyton,
-    gText_DefaultNamePhoenix,
-    gText_DefaultNameSage,
-    gText_DefaultNameEllis,
-    gText_DefaultNameLinden,
-    gText_DefaultNameMarlowe,
-    gText_DefaultNameOcean,
-    gText_DefaultNameIndigo,
-    gText_DefaultNameAsh,
-    gText_DefaultNameZephyr,
-    gText_DefaultNameRiver,
-    gText_DefaultNameTatum,
-    gText_DefaultNameHollis,
-    gText_DefaultNameBriar,
-    gText_DefaultNameLior,
-    gText_DefaultNameOnyx,
-    gText_DefaultNameStorm,
-    gText_DefaultNameNova,
-    gText_DefaultNameWren,
-    gText_DefaultNameAri,
-    gText_DefaultNameCove,
-    gText_DefaultNameJules,
-    gText_DefaultNameRemy
-};
-
-static const u8 *const gFemalePresetNames[] = {
-    gText_DefaultNameRiley,
-    gText_DefaultNameMorgan,
-    gText_DefaultNameAlex,
-    gText_DefaultNameSkyler,
-    gText_DefaultNameJordan,
-    gText_DefaultNameCasey,
-    gText_DefaultNameDrew,
-    gText_DefaultNameTaylor,
-    gText_DefaultNameAvery,
-    gText_DefaultNameQuinn,
-    gText_DefaultNameEmery,
-    gText_DefaultNameRowan,
-    gText_DefaultNameReese,
-    gText_DefaultNameBlair,
-    gText_DefaultNameFinley,
-    gText_DefaultNameDakota,
-    gText_DefaultNameShiloh,
-    gText_DefaultNamePeyton,
-    gText_DefaultNamePhoenix,
-    gText_DefaultNameSage,
-    gText_DefaultNameEllis,
-    gText_DefaultNameLinden,
-    gText_DefaultNameMarlowe,
-    gText_DefaultNameOcean,
-    gText_DefaultNameIndigo,
-    gText_DefaultNameAsh,
-    gText_DefaultNameZephyr,
-    gText_DefaultNameRiver,
-    gText_DefaultNameTatum,
-    gText_DefaultNameHollis,
-    gText_DefaultNameBriar,
-    gText_DefaultNameLior,
-    gText_DefaultNameOnyx,
-    gText_DefaultNameStorm,
-    gText_DefaultNameNova,
-    gText_DefaultNameWren,
-    gText_DefaultNameAri,
-    gText_DefaultNameCove,
-    gText_DefaultNameJules,
-    gText_DefaultNameRemy
 };
 
 static const struct NamingScreenTemplate *const sNamingScreenTemplates[];
@@ -1455,7 +1368,6 @@ static void NamingScreen_CreatePCIcon(void);
 static void NamingScreen_CreateMonIcon(void);
 static void NamingScreen_CreateWaldaDadIcon(void);
 static void NamingScreen_CreateCodeIcon(void);
-static void NamingScreen_CreateRivalIcon(void);
 
 static void (*const sIconFunctions[])(void) =
 {
@@ -1465,7 +1377,6 @@ static void (*const sIconFunctions[])(void) =
     NamingScreen_CreateMonIcon,
     NamingScreen_CreateWaldaDadIcon,
     NamingScreen_CreateCodeIcon,
-    NamingScreen_CreateRivalIcon,
 };
 
 static void CreateInputTargetIcon(void)
@@ -1521,17 +1432,6 @@ static void NamingScreen_CreateCodeIcon(void)
     u8 spriteId;
     spriteId = CreateObjectGraphicsSprite(OBJ_EVENT_GFX_MYSTERY_GIFT_MAN, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
-}
-
-static void NamingScreen_CreateRivalIcon(void)
-{
-    u8 rivalGfxId;
-    u8 spriteId;
-
-    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gSaveBlock2Ptr->playerGender ^ 1);
-    spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
-    gSprites[spriteId].oam.priority = 3;
-    StartSpriteAnim(&gSprites[spriteId], 4);
 }
 
 //--------------------------------------------------
@@ -1848,7 +1748,6 @@ static void (*const sDrawTextEntryBoxFuncs[])(void) =
     [NAMING_SCREEN_NICKNAME]   = DrawMonTextEntryBox,
     [NAMING_SCREEN_WALDA]      = DrawNormalTextEntryBox,
     [NAMING_SCREEN_CODE]       = DrawNormalTextEntryBox,
-    [NAMING_SCREEN_RIVAL]      = DrawNormalTextEntryBox,
 };
 
 static void DrawTextEntryBox(void)
@@ -2263,18 +2162,6 @@ static const struct NamingScreenTemplate sCodeScreenTemplate =
     .title = sText_EnterCode,
 };
 
-static const u8 sText_RivalsName[] = _("Rival's Name?");
-static const struct NamingScreenTemplate sRivalNamingScreenTemplate =
-{
-    .copyExistingString = FALSE,
-    .maxChars = PLAYER_NAME_LENGTH,
-    .iconFunction = 5,
-    .addGenderIcon = FALSE,
-    .initialPage = KBPAGE_LETTERS_UPPER,
-    .unused = 35,
-    .title = sText_RivalsName,
-};
-
 static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
 {
     [NAMING_SCREEN_PLAYER]     = &sPlayerNamingScreenTemplate,
@@ -2283,7 +2170,6 @@ static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
     [NAMING_SCREEN_NICKNAME]   = &sMonNamingScreenTemplate,
     [NAMING_SCREEN_WALDA]      = &sWaldaWordsScreenTemplate,
     [NAMING_SCREEN_CODE]       = &sCodeScreenTemplate,
-    [NAMING_SCREEN_RIVAL]      = &sRivalNamingScreenTemplate,
 };
 
 static const struct OamData sOam_8x8 =

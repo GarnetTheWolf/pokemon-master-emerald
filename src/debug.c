@@ -4085,7 +4085,6 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(PH_NURSE_BLEND) \
     X(PH_NURSE_HELD) \
     X(PH_NURSE_SOLO) \
-    X(MUS_WORLD_OF_POKEMON) \
 
 #define SOUND_LIST_SE \
     X(SE_USE_ITEM) \

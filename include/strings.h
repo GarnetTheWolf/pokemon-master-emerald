@@ -2421,46 +2421,4 @@ extern const u8 gText_Rename[]; // change nickname from summary screen
 // Switch Caught Mon into Party
 extern const u8 gText_CannotSendMonToBoxHM[];
 
-// Rival default names
-extern const u8 gText_DefaultNameRiley[];
-extern const u8 gText_DefaultNameMorgan[];
-extern const u8 gText_DefaultNameAlex[];
-extern const u8 gText_DefaultNameSkyler[];
-extern const u8 gText_DefaultNameJordan[];
-extern const u8 gText_DefaultNameCasey[];
-extern const u8 gText_DefaultNameDrew[];
-extern const u8 gText_DefaultNameTaylor[];
-extern const u8 gText_DefaultNameAvery[];
-extern const u8 gText_DefaultNameQuinn[];
-extern const u8 gText_DefaultNameEmery[];
-extern const u8 gText_DefaultNameRowan[];
-extern const u8 gText_DefaultNameReese[];
-extern const u8 gText_DefaultNameBlair[];
-extern const u8 gText_DefaultNameFinley[];
-extern const u8 gText_DefaultNameDakota[];
-extern const u8 gText_DefaultNameShiloh[];
-extern const u8 gText_DefaultNamePeyton[];
-extern const u8 gText_DefaultNamePhoenix[];
-extern const u8 gText_DefaultNameSage[];
-extern const u8 gText_DefaultNameEllis[];
-extern const u8 gText_DefaultNameLinden[];
-extern const u8 gText_DefaultNameMarlowe[];
-extern const u8 gText_DefaultNameOcean[];
-extern const u8 gText_DefaultNameIndigo[];
-extern const u8 gText_DefaultNameAsh[];
-extern const u8 gText_DefaultNameZephyr[];
-extern const u8 gText_DefaultNameRiver[];
-extern const u8 gText_DefaultNameTatum[];
-extern const u8 gText_DefaultNameHollis[];
-extern const u8 gText_DefaultNameBriar[];
-extern const u8 gText_DefaultNameLior[];
-extern const u8 gText_DefaultNameOnyx[];
-extern const u8 gText_DefaultNameStorm[];
-extern const u8 gText_DefaultNameNova[];
-extern const u8 gText_DefaultNameWren[];
-extern const u8 gText_DefaultNameAri[];
-extern const u8 gText_DefaultNameCove[];
-extern const u8 gText_DefaultNameJules[];
-extern const u8 gText_DefaultNameRemy[];
-
 #endif // GUARD_STRINGS_H
