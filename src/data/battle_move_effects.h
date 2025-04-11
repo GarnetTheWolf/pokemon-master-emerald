@@ -2244,6 +2244,17 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_SPECTRAL_THIEF] =
     {
         .battleScript = BattleScript_EffectSpectralThief,
+    },
+    
+    [EFFECT_SHADOW_HALF] =
+    {
+        .battleScript = BattleScript_EffectSuperFang,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_SHADOW_SKY] =
+    {
+        .battleScript = BattleScript_EffectShadowSky,
         .battleTvScore = 0, // TODO: Assign points
     },
 };

@@ -729,8 +729,20 @@
 #define STRINGID_ITDOESNTAFFECTTWOFOES                727
 #define STRINGID_SENDCAUGHTMONPARTYORBOX              728
 #define STRINGID_PKMNSENTTOPCAFTERCATCH               729
+#define STRINGID_SHADOWPKMNNOTICE                     730
+#define STRINGID_TRAINERCALLTOMON                     731
+#define STRINGID_PKMNSTOREDEXP                        732
+#define STRINGID_PKMNHEARTGAUGEUPDATE                 733
+#define STRINGID_STARTEDSHADOW_SKY                    734
+#define STRINGID_SHADOW_SKYCONTINUES                  735
+#define STRINGID_SHADOW_SKYSTOPPED                    736
+#define STRINGID_SHADOW_SKYDAMAGE                     737
+#define STRINGID_REVERSEMODE_ENTER                    738
+#define STRINGID_REVERSEMODE_DAMAGE                   738
+#define STRINGID_REVERSEMODE_CALLED                   739
+#define STRINGID_GOTCHAPKMNCAUGHTTRAINER              740
 
-#define BATTLESTRINGS_COUNT                           730
+#define BATTLESTRINGS_COUNT                           741
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,
@@ -783,6 +795,7 @@
 #define B_MSG_STARTED_HAIL      5
 #define B_MSG_STARTED_SNOW      6
 #define B_MSG_STARTED_FOG       7
+#define B_MSG_STARTED_SHADOW_SKY 8
 
 // gWeatherEndsStringIds
 #define B_MSG_WEATHER_END_RAIN         0
@@ -792,7 +805,8 @@
 #define B_MSG_WEATHER_END_SNOW         4
 #define B_MSG_WEATHER_END_FOG          5
 #define B_MSG_WEATHER_END_STRONG_WINDS 6
-#define B_MSG_WEATHER_END_COUNT        7
+#define B_MSG_WEATHER_END_SHADOW_SKY   7
+#define B_MSG_WEATHER_END_COUNT        8
 
 // gWeatherTurnStringIds
 #define B_MSG_WEATHER_TURN_RAIN         0
@@ -803,7 +817,8 @@
 #define B_MSG_WEATHER_TURN_SNOW         5
 #define B_MSG_WEATHER_TURN_FOG          6
 #define B_MSG_WEATHER_TURN_STRONG_WINDS 7
-#define B_MSG_WEATHER_TURN_COUNT        8
+#define B_MSG_WEATHER_TURN_SHADOW_SKY   8
+#define B_MSG_WEATHER_TURN_COUNT        9
 
 // gRainContinuesStringIds
 #define B_MSG_RAIN_CONTINUES     0
@@ -814,6 +829,7 @@
 #define B_MSG_SANDSTORM  0
 #define B_MSG_HAIL       1
 #define B_MSG_SNOW       2
+#define B_MSG_SHADOW_SKY 3
 
 // gReflectLightScreenSafeguardStringIds
 #define B_MSG_SIDE_STATUS_FAILED     0

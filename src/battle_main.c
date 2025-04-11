@@ -200,7 +200,7 @@ EWRAM_DATA u8 gBattleCommunication[BATTLE_COMMUNICATION_ENTRIES_COUNT] = {0};
 EWRAM_DATA u8 gBattleOutcome = 0;
 EWRAM_DATA struct ProtectStruct gProtectStructs[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA struct SpecialStatus gSpecialStatuses[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u16 gBattleWeather = 0;
+EWRAM_DATA u32 gBattleWeather = 0;
 EWRAM_DATA struct WishFutureKnock gWishFutureKnock = {0};
 EWRAM_DATA u16 gIntroSlideFlags = 0;
 EWRAM_DATA u8 gSentPokesToOpponent[2] = {0};
@@ -1856,6 +1856,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
     u32 personalityValue;
+    u8 levelBoost = 0;
     s32 i;
     u8 monsCount;
     if (battleTypeFlags & BATTLE_TYPE_TRAINER && !(battleTypeFlags & (BATTLE_TYPE_FRONTIER
@@ -1905,7 +1906,9 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             else if (partyData[monIndex].gender == TRAINER_MON_RANDOM_GENDER)
                 personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(Random() & 1 ? MON_MALE : MON_FEMALE, partyData[monIndex].species);
             ModifyPersonalityForNature(&personalityValue, partyData[monIndex].nature);
-            if (partyData[monIndex].isShiny)
+            if (partyData[monIndex].isShadow)
+                otIdType = OT_ID_PLAYER_ID;
+            else if (partyData[monIndex].isShiny)
             {
                 otIdType = OT_ID_PRESET;
                 fixedOtId = HIHALF(personalityValue) ^ LOHALF(personalityValue);
@@ -1952,7 +1955,19 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 ball = partyData[monIndex].ball;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
             }
-            if (partyData[monIndex].nickname != NULL)
+            
+            levelBoost = 0;
+            if (partyData[monIndex].isShadow)
+            {
+                bool8 shad = TRUE;
+                SetMonData(&party[i], MON_DATA_IS_SHADOW, &shad);
+                SetMonData(&party[i], MON_DATA_SHADOW_ID, &partyData[i].shadowID);
+                SetMonData(&party[i], MON_DATA_SHADOW_AGGRO, &partyData[i].shadowAggro);
+                levelBoost = partyData[i].boostLevel;
+                SetMonData(&party[i], MON_DATA_HEART_VALUE, &partyData[i].heartGauge);
+                SetMonData(&party[i], MON_DATA_HEART_MAX, &partyData[i].heartGauge);
+            }
+            else if (partyData[monIndex].nickname != NULL)
             {
                 SetMonData(&party[i], MON_DATA_NICKNAME, partyData[monIndex].nickname);
             }
@@ -1979,7 +1994,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 u32 data = partyData[monIndex].teraType;
                 SetMonData(&party[i], MON_DATA_TERA_TYPE, &data);
             }
-            CalculateMonStats(&party[i]);
+            CalculateMonStats(&party[i], levelBoost);
 
             if (B_TRAINER_CLASS_POKE_BALLS >= GEN_7 && ball == -1)
             {
@@ -3705,6 +3720,11 @@ static void DoBattleIntro(void)
                                           | BATTLE_TYPE_TRAINER_HILL)))
                 {
                     HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
+                    if (gBattleMons[battler].isShadow)
+                    {
+                        LaunchStatusAnimation(battler, B_ANIM_STATUS_SHADOW);
+                        PrepareStringBattle(STRINGID_SHADOWPKMNNOTICE, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
+                    }
                 }
             }
 
@@ -4416,8 +4436,9 @@ static void HandleTurnActionSelectionState(void)
                          && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
                          && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
                 {
-                    BattleScriptExecute(BattleScript_PrintCantRunFromTrainer);
-                    gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN;
+                    /* BattleScriptExecute(BattleScript_PrintCantRunFromTrainer);
+                    gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN; */
+                    gBattleCommunication[battler]++; // skip to HandleAction_Run, so that the call-to-mon script runs properly
                 }
                 else if ((IsRunningFromBattleImpossible(battler) != BATTLE_RUN_SUCCESS
                          && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
@@ -5862,19 +5883,18 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
     case EFFECT_WEATHER_BALL:
         if (monInBattle)
         {
-            if (HasWeatherEffect())
-            {
-                if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                    return TYPE_WATER;
-                else if (gBattleWeather & B_WEATHER_SANDSTORM)
-                    return TYPE_ROCK;
-                else if (gBattleWeather & B_WEATHER_SUN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                    return TYPE_FIRE;
-                else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
-                    return TYPE_ICE;
-                else
-                    return moveType;
-            }
+            if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
+                return TYPE_WATER;
+            else if (gBattleWeather & B_WEATHER_SANDSTORM)
+                return TYPE_ROCK;
+            else if (gBattleWeather & B_WEATHER_SUN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
+                return TYPE_FIRE;
+            else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+                return TYPE_ICE;
+            else if (gBattleWeather & B_WEATHER_SHADOW_SKY)
+                return TYPE_MYSTERY;
+            else
+                return moveType;
         }
         else
         {

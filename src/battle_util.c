@@ -200,6 +200,15 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
         .continuesMessage = B_MSG_WEATHER_TURN_STRONG_WINDS,
         .animation = B_ANIM_STRONG_WINDS,
     },
+
+    [BATTLE_WEATHER_SHADOW_SKY] =
+    {
+        .flag = B_WEATHER_SHADOW_SKY,
+        .rock = HOLD_EFFECT_NONE,
+        .endMessage = B_MSG_WEATHER_END_SHADOW_SKY,
+        .continuesMessage = B_MSG_WEATHER_TURN_SHADOW_SKY,
+        .animation = B_ANIM_SHADOW_SKY_CONTINUES,
+    },
 };
 
 static u32 CalcBeatUpPower(void)
@@ -623,6 +632,30 @@ void HandleAction_Run(void)
 
         gBattleOutcome |= B_OUTCOME_LINK_BATTLE_RAN;
         gSaveBlock2Ptr->frontier.disableRecordBattle = TRUE;
+    }
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    {
+        if (gBattleMons[gBattlerAttacker].isReverse)
+        {
+            gBattleMons[gBattlerAttacker].isReverse = FALSE;
+            gBattlescriptCurrInstr = BattleScript_TrainerCallToMonReverse;
+            gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+        }
+        else
+        {
+            if (gBattleMons[gBattlerAttacker].statStages[STAT_ACC] < MAX_STAT_STAGE)
+            {
+                if (B_X_ITEMS_BUFF >= GEN_7)
+                    gBattleMons[gBattlerAttacker].statStages[STAT_ACC] += 2;
+                else
+                    gBattleMons[gBattlerAttacker].statStages[STAT_ACC] += 1;
+                if (gBattleMons[gBattlerAttacker].statStages[STAT_ACC] > MAX_STAT_STAGE)
+                    gBattleMons[gBattlerAttacker].statStages[STAT_ACC] = MAX_STAT_STAGE;
+            }
+
+            gBattlescriptCurrInstr = BattleScript_TrainerCallToMonNormal;
+            gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+        }
     }
     else
     {
@@ -1644,6 +1677,7 @@ enum
     ENDTURN_RAINBOW,
     ENDTURN_SEA_OF_FIRE,
     ENDTURN_SWAMP,
+    ENDTURN_SHADOW_SKY,
     ENDTURN_FIELD_COUNT,
 };
 
@@ -2193,6 +2227,7 @@ enum
     ENDTURN_GMAX_MOVE_RESIDUAL_DAMAGE,
     ENDTURN_SEA_OF_FIRE_DAMAGE,
     ENDTURN_ITEMS3,
+    ENDTURN_REVERSE_MODE,
     ENDTURN_BATTLER_COUNT
 };
 
@@ -2282,6 +2317,18 @@ u8 DoBattlerEndTurnEffects(void)
                 if (gBattleStruct->moveDamage[battler] == 0)
                     gBattleStruct->moveDamage[battler] = 1;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HAIL;
+                BattleScriptExecute(BattleScript_DamagingWeather);
+                effect++;
+            }
+            else if (gBattleWeather & B_WEATHER_SHADOW_SKY
+                  && !IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_SHADOW)
+                  && !(gStatuses3[gBattlerAttacker] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
+                  && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES)
+            {
+                gBattleScripting.battler = battler;
+                gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
+                if (gBattleStruct->moveDamage[battler] == 0)
+                    gBattleStruct->moveDamage[battler] = 1;
                 BattleScriptExecute(BattleScript_DamagingWeather);
                 effect++;
             }
@@ -2886,6 +2933,20 @@ u8 DoBattlerEndTurnEffects(void)
                 BtlController_EmitStatusAnimation(battler, BUFFER_A, FALSE, STATUS1_BURN);
                 MarkBattlerForControllerExec(battler);
                 BattleScriptExecute(BattleScript_HurtByTheSeaOfFire);
+                effect++;
+            }
+            gBattleStruct->turnEffectsTracker++;
+            break;
+        case ENDTURN_REVERSE_MODE:
+            if (gBattleMons[battler].isReverse
+             && IsBattlerAlive(battler)
+             && !IsBattlerProtectedByMagicGuard(battler, ability))
+            {
+                gBattleStruct->moveDamage[battler] = (gBattleMons[battler].maxHP / 16) + (Random() % 3) - 1;
+                if (gBattleStruct->moveDamage[battler] == 0)
+                    gBattleStruct->moveDamage[battler] = 1;
+                BattleScriptExecute(BattleScript_ReverseModeTurnDmg);
+    		    LaunchStatusAnimation(battler, B_ANIM_STATUS_REVERSE_MODE);
                 effect++;
             }
             gBattleStruct->turnEffectsTracker++;
@@ -10114,6 +10175,8 @@ static uq4_12_t GetWeatherDamageModifier(struct DamageCalculationData *damageCal
 
     if (weather == B_WEATHER_NONE)
         return UQ_4_12(1.0);
+    if ((weather & B_WEATHER_SHADOW_SKY) && moveType == TYPE_SHADOW)
+        return UQ_4_12(1.5);
     if (GetMoveEffect(move) == EFFECT_HYDRO_STEAM && (weather & B_WEATHER_SUN) && holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA)
         return UQ_4_12(1.5);
     if (holdEffectDef == HOLD_EFFECT_UTILITY_UMBRELLA)
@@ -10131,6 +10194,7 @@ static uq4_12_t GetWeatherDamageModifier(struct DamageCalculationData *damageCal
             return UQ_4_12(1.0);
         return (moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
     }
+
     return UQ_4_12(1.0);
 }
 
@@ -10708,6 +10772,15 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(u32 move, u32 mov
             RecordAbilityBattle(battlerDef, gBattleMons[battlerDef].ability);
         }
     }
+
+    // Shadow Move conditional type effectiveness
+    if (gMovesInfo[move].type == TYPE_SHADOW)
+    {
+        if (gBattleMons[battlerDef].isShadow)
+            modifier = UQ_4_12(0.5);
+        else
+            modifier = UQ_4_12(2.0);
+	}
 
     if (recordAbilities)
         TryInitializeFirstSTABMoveTrainerSlide(battlerDef, battlerAtk, moveType);
